@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.2.1" />
+    <PackageReference Include="DevExpress.Win.Design" Version="24.2.6" />
+    <PackageReference Include="DevExpress.Win.Grid" Version="24.2.6" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ExternalTestLibrary\ExternalTestLibrary.csproj" />
+  </ItemGroup>
+
+</Project>
