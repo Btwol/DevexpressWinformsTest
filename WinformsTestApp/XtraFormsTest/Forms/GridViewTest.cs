@@ -26,11 +26,13 @@ using System.Drawing;
 
 namespace XtraFormsTest.Forms
 {
-    public partial class GridViewTest : DevExpress.XtraEditors.XtraForm
+    public partial class GridViewTest : XtraUserControl //DevExpress.XtraEditors.XtraForm
     {
         private readonly MVVMContext mvvmContext;
+        private readonly MVVMContextFluentAPI<PersonViewModel> fluent;
+        private readonly Func<EditPersonForm> editPersonFormFactory;
 
-        public GridViewTest(PersonViewModel viewModel)
+        public GridViewTest(PersonViewModel viewModel, Func<EditPersonForm> editPersonFormFactory)
         {
             InitializeComponent();
 
@@ -38,7 +40,7 @@ namespace XtraFormsTest.Forms
             mvvmContext = new MVVMContext();
             mvvmContext.ContainerControl = this;
             mvvmContext.SetViewModel(typeof(PersonViewModel), viewModel);
-            var fluent = mvvmContext.OfType<PersonViewModel>();
+            fluent = mvvmContext.OfType<PersonViewModel>();
 
             //change localisation to french, note: "data annotations and validation messages might not reflect
             //the intended culture correctly if you set culture too late.
@@ -51,6 +53,10 @@ namespace XtraFormsTest.Forms
             //can be manually set here on in the nameColumn properties in the designer
             nameColumn.FieldName = nameof(Person.Name);
             valuedColumn.FieldName = nameof(Person.Value);
+
+            //allow/disable direct cell value editing
+            //nameColumn.OptionsColumn.AllowEdit = false;
+            //valuedColumn.OptionsColumn.AllowEdit = false;
 
             //localisation - assign proper column name at initialization
             nameColumn.Caption = ColumnNames.Name;
@@ -72,6 +78,7 @@ namespace XtraFormsTest.Forms
 
             //sets the people count at the page bottom
             fluent.SetBinding(labelControl1, x => x.Text, m => m.People.Count);
+            this.editPersonFormFactory = editPersonFormFactory;
 
             //enables the embedded navigator
             //gridControl1.UseEmbeddedNavigator = true;
@@ -81,28 +88,13 @@ namespace XtraFormsTest.Forms
 
         private void gridView1_InvalidValueException(object sender, InvalidValueExceptionEventArgs e)
         {
-            MessageBox.Show(this, e.ErrorText, "Invalid Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            e.ExceptionMode = ExceptionMode.NoAction;
+            //MessageBox.Show(this, e.ErrorText, "Invalid Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            e.ExceptionMode = ExceptionMode.DisplayError;
         }
 
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
-            var fluent = mvvmContext.OfType<PersonViewModel>();
             fluent.ViewModel.SaveChanges();
-        }
-
-        private void gridView1_InitNewRow_1(object sender, InitNewRowEventArgs e)
-        {
-            var gridView = sender as GridView;
-            if (gridView != null)
-            {
-                var newPerson = new Person { Name = "", Value = 0 };
-                gridView.SetRowCellValue(e.RowHandle, nameColumn, newPerson.Name);
-                gridView.SetRowCellValue(e.RowHandle, valuedColumn, newPerson.Value);
-
-                var fluent = mvvmContext.OfType<PersonViewModel>();
-                fluent.ViewModel.SaveChanges();
-            }
         }
 
         private void rowDeleteButton_Click(object sender, EventArgs e)
@@ -111,11 +103,7 @@ namespace XtraFormsTest.Forms
 
             if (selectedPerson != null)
             {
-                // Remove the selected person from the BindingList
-                var fluent = mvvmContext.OfType<PersonViewModel>();
-                fluent.ViewModel.People.Remove(selectedPerson);
-                // Save changes to the repository
-                fluent.ViewModel.SaveChanges();
+                fluent.ViewModel.DeletePerson(selectedPerson);
             }
         }
 
@@ -128,7 +116,7 @@ namespace XtraFormsTest.Forms
                 // Get the clicked row handle  
                 int rowHandle = e.HitInfo.RowHandle;
 
-                // Retrieve your data object  
+                // Retrieve data object  
                 var person = view.GetRow(rowHandle) as Person;
 
                 if (person != null)
@@ -155,7 +143,7 @@ namespace XtraFormsTest.Forms
                         }
                     });
 
-                    // Clear default items and add your custom items  
+                    // Clear default items and add custom items  
                     e.Menu.Items.Clear();
                     e.Menu.Items.Add(menuItemEdit);
                     e.Menu.Items.Add(menuItemDelete);
@@ -170,17 +158,20 @@ namespace XtraFormsTest.Forms
 
             if (person != null)
             {
-                var editForm = new EditPersonForm(new Person
-                {
-                    Name = person.Name,
-                    Value = person.Value
-                });
+                var editForm = editPersonFormFactory();
+                editForm.SetEditedPerson(person);
+                //    new EditPersonForm(new Person
+                //{
+                //    Name = person.Name,
+                //    Value = person.Value
+                //});
 
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
                     // Update the existing object with edited values  
-                    person.Name = editForm.EditedPerson.Name;
-                    person.Value = editForm.EditedPerson.Value;
+                    var editedPerson = editForm.GetEditedPerson();
+                    person.Name = editedPerson.Name;
+                    person.Value = editedPerson.Value;
 
                     //save db changes
                     var fluent = mvvmContext.OfType<PersonViewModel>();
@@ -217,20 +208,20 @@ namespace XtraFormsTest.Forms
         {
             gridView1.ClearSelection();
 
-            using (var editForm = new EditPersonForm(null))
+            var editForm = editPersonFormFactory();
+            editForm.SetEditedPerson(new Person());
+
+            if (editForm.ShowDialog() == DialogResult.OK)
             {
-                if (editForm.ShowDialog() == DialogResult.OK)
-                {
-                    //add new person to list
-                    var fluent = mvvmContext.OfType<PersonViewModel>();
-                    fluent.ViewModel.People.Add(editForm.EditedPerson);
+                //add new person to list
+                var newPerson = editForm.GetEditedPerson();
+                fluent.ViewModel.People.Add(newPerson);
 
-                    //save db changes
-                    fluent.ViewModel.SaveChanges();
+                //save db changes
+                fluent.ViewModel.SaveChanges();
 
-                    // Refresh the view to reflect changes  
-                    gridView1.RefreshData();
-                }
+                // Refresh the view to reflect changes  
+                gridView1.RefreshData();
             }
         }
     }

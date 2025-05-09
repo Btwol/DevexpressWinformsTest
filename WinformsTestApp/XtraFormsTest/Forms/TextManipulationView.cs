@@ -14,7 +14,7 @@ using XtraFormsTest.ViewModels;
 
 namespace XtraFormsTest.Forms
 {
-    public partial class TextManipulationView : DevExpress.XtraEditors.XtraForm
+    public partial class TextManipulationView : XtraUserControl //DevExpress.XtraEditors.XtraForm
     {
         MVVMContext mvvmContext;
 

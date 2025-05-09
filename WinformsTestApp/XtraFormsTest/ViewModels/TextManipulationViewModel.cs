@@ -28,7 +28,7 @@ namespace XtraFormsTest.ViewModels
 
         private void SetEditedText()
         {
-            EditedText = $"{LabelText} - {NumValue}";
+            //EditedText = $"{LabelText} - {NumValue}";
         }
     }
 }

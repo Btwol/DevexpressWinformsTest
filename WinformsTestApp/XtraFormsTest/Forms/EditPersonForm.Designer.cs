@@ -45,12 +45,14 @@
             // 
             nameLabel.Appearance.Options.UseTextOptions = true;
             nameLabel.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            nameLabel.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
             tablePanel1.SetColumn(nameLabel, 0);
             nameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            nameLabel.Location = new System.Drawing.Point(13, 12);
+            nameLabel.Location = new System.Drawing.Point(26, 25);
+            nameLabel.Margin = new System.Windows.Forms.Padding(15);
             nameLabel.Name = "nameLabel";
             tablePanel1.SetRow(nameLabel, 0);
-            nameLabel.Size = new System.Drawing.Size(382, 123);
+            nameLabel.Size = new System.Drawing.Size(356, 97);
             nameLabel.TabIndex = 0;
             nameLabel.Text = "Name";
             // 
@@ -58,12 +60,14 @@
             // 
             valueLabel.Appearance.Options.UseTextOptions = true;
             valueLabel.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            valueLabel.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
             tablePanel1.SetColumn(valueLabel, 0);
             valueLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            valueLabel.Location = new System.Drawing.Point(13, 139);
+            valueLabel.Location = new System.Drawing.Point(26, 152);
+            valueLabel.Margin = new System.Windows.Forms.Padding(15);
             valueLabel.Name = "valueLabel";
             tablePanel1.SetRow(valueLabel, 1);
-            valueLabel.Size = new System.Drawing.Size(382, 123);
+            valueLabel.Size = new System.Drawing.Size(356, 97);
             valueLabel.TabIndex = 1;
             valueLabel.Text = "Value";
             // 
@@ -74,6 +78,7 @@
             okButton.Dock = System.Windows.Forms.DockStyle.Fill;
             okButton.Location = new System.Drawing.Point(26, 406);
             okButton.Margin = new System.Windows.Forms.Padding(15);
+            okButton.MinimumSize = new System.Drawing.Size(0, 30);
             okButton.Name = "okButton";
             tablePanel1.SetRow(okButton, 3);
             okButton.Size = new System.Drawing.Size(356, 95);
@@ -88,6 +93,7 @@
             cancelButton.Dock = System.Windows.Forms.DockStyle.Fill;
             cancelButton.Location = new System.Drawing.Point(412, 406);
             cancelButton.Margin = new System.Windows.Forms.Padding(15);
+            cancelButton.MinimumSize = new System.Drawing.Size(0, 30);
             cancelButton.Name = "cancelButton";
             tablePanel1.SetRow(cancelButton, 3);
             cancelButton.Size = new System.Drawing.Size(356, 95);
@@ -145,6 +151,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
+            AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ClientSize = new System.Drawing.Size(794, 527);
             Controls.Add(tablePanel1);
             Name = "EditPersonForm";

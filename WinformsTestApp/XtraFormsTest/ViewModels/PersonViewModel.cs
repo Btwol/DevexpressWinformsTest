@@ -25,6 +25,14 @@ namespace XtraFormsTest.ViewModels
             LoadPeople();
         }
 
+        public void DeletePerson(Person person)
+        {
+            // Remove the selected person from the BindingList
+            People.Remove(person);
+            // Save changes to the repository
+            SaveChanges();
+        }
+
         private void LoadPeople()
         {
             // Simulate loading data from a database

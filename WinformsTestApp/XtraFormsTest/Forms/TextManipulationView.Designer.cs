@@ -39,7 +39,7 @@
             // labelControl1
             // 
             labelControl1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            labelControl1.Location = new System.Drawing.Point(12, 26);
+            labelControl1.Location = new System.Drawing.Point(-280, 26);
             labelControl1.Name = "labelControl1";
             labelControl1.Size = new System.Drawing.Size(63, 13);
             labelControl1.TabIndex = 0;
@@ -75,13 +75,14 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(785, 538);
+            AutoSize = true;
+            AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             Controls.Add(simpleButton1);
             Controls.Add(spinEdit1);
             Controls.Add(textEdit1);
             Controls.Add(labelControl1);
             Name = "TextManipulationView";
-            Text = "TextManipulationView";
+            Size = new System.Drawing.Size(200, 52);
             ((System.ComponentModel.ISupportInitialize)textEdit1.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)spinEdit1.Properties).EndInit();
             ResumeLayout(false);

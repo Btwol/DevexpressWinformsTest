@@ -29,10 +29,10 @@ namespace XtraFormsTest.Forms
             {
                 for (int j = 0; j <= 2; j++)
                 {
-                    Panel card = CreateCard((s, e) => OpenNewForm(formFactory), "Card");
+                    //Panel card = CreateCard((s, e) => OpenNewForm(formFactory), "Card");
 
-                    tablePanel1.Controls.Add(card);
-                    tablePanel1.SetCell(card, i, j);
+                    //tablePanel1.Controls.Add(card);
+                    //tablePanel1.SetCell(card, i, j);
                 }
             }
 

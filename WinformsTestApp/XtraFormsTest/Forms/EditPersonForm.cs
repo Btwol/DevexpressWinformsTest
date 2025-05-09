@@ -9,36 +9,50 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using DevExpress.Dialogs.Core.View;
 using DevExpress.Mvvm.POCO;
+using DevExpress.Utils.MVVM;
 using DevExpress.XtraEditors;
 using ExternalTestLibrary;
+using XtraFormsTest.Services;
+using XtraFormsTest.ViewModels;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace XtraFormsTest.Forms
 {
     public partial class EditPersonForm : DevExpress.XtraEditors.XtraForm
     {
-        public Person EditedPerson { get; set; }
+        private readonly MVVMContext mvvmContext;
+        private readonly MVVMContextFluentAPI<EditPersonViewModel> fluent;
 
-        public EditPersonForm(Person person = null)
+        public EditPersonForm(IUIConfigService uIConfigService, EditPersonViewModel viewModel)
         {
             InitializeComponent();
 
+            //configure the form
+            uIConfigService.ApplyLabelDefaults(nameLabel);
+
+            mvvmContext = new MVVMContext();
+            mvvmContext.ContainerControl = this;
+            mvvmContext.SetViewModel(typeof(EditPersonViewModel), viewModel);
+            fluent = mvvmContext.OfType<EditPersonViewModel>();
+
+            fluent.SetBinding(nameEdit, x => x.Text, m => m.EditedPerson.Name);
+            fluent.SetBinding(valueEdit, x => x.Value, m => m.EditedPerson.Value);
+        }
+
+        public Person GetEditedPerson()
+        {
+            return fluent.ViewModel.EditedPerson;
+        }
+
+        public void SetEditedPerson(Person person)
+        {
             if (person == null)
             {
-                // Creating new person  
-                EditedPerson = new Person();
+                throw new ArgumentNullException(nameof(person));
             }
-            else
-            {
-                // Editing existing person  
-                EditedPerson = person;
-                nameEdit.Text = EditedPerson.Name;
-                valueEdit.Value = EditedPerson.Value;
-            }
-
-            nameEdit.DataBindings.Add("Text", EditedPerson, "Name", true, DataSourceUpdateMode.OnPropertyChanged);
-            valueEdit.DataBindings.Add("Value", EditedPerson, "Value", true, DataSourceUpdateMode.OnPropertyChanged);
+            fluent.ViewModel.EditedPerson = person;
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -55,18 +69,8 @@ namespace XtraFormsTest.Forms
 
         private void nameEdit_Validating(object sender, CancelEventArgs e)
         {
-
-            var context = new ValidationContext(EditedPerson) { MemberName = "Name" };
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateProperty(EditedPerson.Name, context, results);
-
-            if (!isValid)
-            {
-                e.Cancel = true;
-                string errorMessage = results.First().ErrorMessage;
-                MessageBox.Show(errorMessage, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            var fluent = mvvmContext.OfType<EditPersonViewModel>();
+            fluent.ViewModel.ValidatePerson(sender, e);
         }
     }
 }
