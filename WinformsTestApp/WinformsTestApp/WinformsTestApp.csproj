@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Win.BonusSkins" Version="24.2.6" />
     <PackageReference Include="DevExpress.Win.Design" Version="24.2.6" />
     <PackageReference Include="DevExpress.Win.Grid" Version="24.2.6" />
   </ItemGroup>

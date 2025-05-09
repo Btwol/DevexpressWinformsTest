@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Views.Grid;
 using ExternalTestLibrary;
@@ -21,9 +22,10 @@ namespace XtraFormsTest.ViewModels
         public PersonViewModel(IPersonRepository personRepository)
         {
             this.personRepository = personRepository;
+            LoadPeople();
         }
 
-        public void LoadPeople()
+        private void LoadPeople()
         {
             // Simulate loading data from a database
             var people = personRepository.GetPeople();
@@ -49,6 +51,8 @@ namespace XtraFormsTest.ViewModels
         {
             //simulates saving changes to a database
             //repository.SaveChanges();
+
+            RaisePropertyChanged(nameof(People));
         }
     }
 }

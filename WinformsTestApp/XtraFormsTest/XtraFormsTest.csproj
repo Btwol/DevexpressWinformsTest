@@ -17,4 +17,19 @@
     <ProjectReference Include="..\ExternalTestLibrary\ExternalTestLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\ColumnNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ColumnNames.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ColumnNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ColumnNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
