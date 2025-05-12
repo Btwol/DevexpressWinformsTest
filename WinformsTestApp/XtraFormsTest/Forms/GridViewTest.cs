@@ -1,28 +1,16 @@
 ﻿using System;
-using DevExpress.ClipboardSource.SpreadsheetML;
-using DevExpress.Data;
-using DevExpress.XtraEditors;
-using DevExpress.XtraEditors.Repository;
-using DevExpress.XtraGrid;
-using DevExpress.XtraGrid.Columns;
-using DevExpress.XtraGrid.Views.Grid;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
-using DevExpress.Utils.MVVM;
-using XtraFormsTest.ViewModels;
-using static DevExpress.XtraBars.Docking2010.Views.BaseRegistrator;
-using ExternalTestLibrary;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using DevExpress.Dialogs.Core.View;
-using DevExpress.XtraEditors.Controls;
 using System.Globalization;
 using System.Threading;
-using DevExpress.XtraVerticalGrid;
+using System.Windows.Forms;
+using DevExpress.Utils.Menu;
+using DevExpress.Utils.MVVM;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Views.Grid;
+using ExternalTestLibrary;
 using XtraFormsTest.Resources;
-using System.Drawing;
+using XtraFormsTest.Services;
+using XtraFormsTest.ViewModels;
 
 namespace XtraFormsTest.Forms
 {
@@ -31,10 +19,14 @@ namespace XtraFormsTest.Forms
         private readonly MVVMContext mvvmContext;
         private readonly MVVMContextFluentAPI<PersonViewModel> fluent;
         private readonly Func<EditPersonForm> editPersonFormFactory;
+        private readonly ILocalisationProvider _localisationProvider;
 
-        public GridViewTest(PersonViewModel viewModel, Func<EditPersonForm> editPersonFormFactory)
+        public GridViewTest(PersonViewModel viewModel, Func<EditPersonForm> editPersonFormFactory, 
+            ILocalisationProvider localisationProvider)
         {
             InitializeComponent();
+
+            _localisationProvider = localisationProvider;
 
             // Initialize MVVM Context  
             mvvmContext = new MVVMContext();
@@ -45,8 +37,8 @@ namespace XtraFormsTest.Forms
             //change localisation to french, note: "data annotations and validation messages might not reflect
             //the intended culture correctly if you set culture too late.
             //Ideally, set culture before creating ViewModels or UI bindings."
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en");
+            //Thread.CurrentThread.CurrentUICulture = _localisationProvider.CultureInfo;
+            //Thread.CurrentThread.CurrentCulture = _localisationProvider.CultureInfo;
 
             //databinding
             gridControl1.DataSource = fluent.ViewModel.People;
@@ -59,8 +51,7 @@ namespace XtraFormsTest.Forms
             //valuedColumn.OptionsColumn.AllowEdit = false;
 
             //localisation - assign proper column name at initialization
-            nameColumn.Caption = ColumnNames.Name;
-            valuedColumn.Caption = ColumnNames.Value;
+            ApplyLocalizedNames();
 
             //cell text allignment
             nameColumn.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -86,6 +77,21 @@ namespace XtraFormsTest.Forms
             //gridControl1.EmbeddedNavigator.Padding = new Padding(5);
         }
 
+        private void ApplyLocalizedNames()
+        {
+            nameColumn.Caption = ColumnNames.Name;
+            valuedColumn.Caption = ColumnNames.Value;
+        }
+
+        //needs (?) to be called when localization/Thread culture value is changed in parent navigation frame
+        //on method call Refresh() to apply new localized text values
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            ApplyLocalizedNames();
+        }
+
         private void gridView1_InvalidValueException(object sender, InvalidValueExceptionEventArgs e)
         {
             //MessageBox.Show(this, e.ErrorText, "Invalid Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -103,7 +109,14 @@ namespace XtraFormsTest.Forms
 
             if (selectedPerson != null)
             {
-                fluent.ViewModel.DeletePerson(selectedPerson);
+                // Confirm deletion  
+                var result = XtraMessageBox.Show($"Do you really want to delete '{selectedPerson.Name}'?",
+                    "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    fluent.ViewModel.DeletePerson(selectedPerson);
+                }
             }
         }
 
@@ -111,7 +124,7 @@ namespace XtraFormsTest.Forms
         {
             GridView view = sender as GridView;
 
-            if (e.MenuType == DevExpress.XtraGrid.Views.Grid.GridMenuType.Row)
+            if (e.MenuType == GridMenuType.Row)
             {
                 // Get the clicked row handle  
                 int rowHandle = e.HitInfo.RowHandle;
@@ -122,12 +135,12 @@ namespace XtraFormsTest.Forms
                 if (person != null)
                 {
                     // Create a context menu  
-                    DevExpress.Utils.Menu.DXMenuItem menuItemEdit = new DevExpress.Utils.Menu.DXMenuItem("Edit", (s, ea) =>
+                    DXMenuItem menuItemEdit = new DXMenuItem("Edit", (s, ea) =>
                     {
                         MessageBox.Show($"Editing {person.Name}");
                     });
 
-                    DevExpress.Utils.Menu.DXMenuItem menuItemDelete = new DevExpress.Utils.Menu.DXMenuItem("Delete", (s, ea) =>
+                    DXMenuItem menuItemDelete = new DXMenuItem("Delete", (s, ea) =>
                     {
                         var result = MessageBox.Show("Are you sure you want to delete the selected item?",
                              "Confirm Deletion",
@@ -180,27 +193,6 @@ namespace XtraFormsTest.Forms
                     // Refresh the view to reflect changes  
                     view.RefreshData();
                 }
-                
-                //using (var editForm = new EditPersonForm(new Person
-                //{
-                //    Name = person.Name,
-                //    Value = person.Value
-                //}))
-                //{
-                //    if (editForm.ShowDialog() == DialogResult.OK)
-                //    {
-                //        // Update the existing object with edited values  
-                //        person.Name = editForm.EditedPerson.Name;
-                //        person.Value = editForm.EditedPerson.Value;
-
-                //        //save db changes
-                //        var fluent = mvvmContext.OfType<PersonViewModel>();
-                //        fluent.ViewModel.SaveChanges();
-
-                //        // Refresh the view to reflect changes  
-                //        view.RefreshData();
-                //    }
-                //}
             }
         }
 

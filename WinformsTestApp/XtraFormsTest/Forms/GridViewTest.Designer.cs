@@ -54,7 +54,7 @@
             gridControl1.MainView = gridView1;
             gridControl1.Name = "gridControl1";
             tablePanel1.SetRow(gridControl1, 0);
-            gridControl1.Size = new System.Drawing.Size(1440, 718);
+            gridControl1.Size = new System.Drawing.Size(1440, 738);
             gridControl1.TabIndex = 0;
             gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView1 });
             // 
@@ -94,7 +94,7 @@
             labelControl1.Margin = new System.Windows.Forms.Padding(15);
             labelControl1.Name = "labelControl1";
             tablePanel2.SetRow(labelControl1, 0);
-            labelControl1.Size = new System.Drawing.Size(466, 89);
+            labelControl1.Size = new System.Drawing.Size(466, 69);
             labelControl1.TabIndex = 1;
             labelControl1.Text = "labelControl1";
             // 
@@ -107,7 +107,7 @@
             rowDeleteButton.Name = "rowDeleteButton";
             rowDeleteButton.Padding = new System.Windows.Forms.Padding(15);
             tablePanel2.SetRow(rowDeleteButton, 0);
-            rowDeleteButton.Size = new System.Drawing.Size(325, 89);
+            rowDeleteButton.Size = new System.Drawing.Size(325, 69);
             rowDeleteButton.TabIndex = 0;
             rowDeleteButton.Text = "Delete";
             rowDeleteButton.Click += rowDeleteButton_Click;
@@ -121,7 +121,7 @@
             rowCreateButton.Name = "rowCreateButton";
             rowCreateButton.Padding = new System.Windows.Forms.Padding(15);
             tablePanel2.SetRow(rowCreateButton, 0);
-            rowCreateButton.Size = new System.Drawing.Size(325, 89);
+            rowCreateButton.Size = new System.Drawing.Size(325, 69);
             rowCreateButton.TabIndex = 1;
             rowCreateButton.Text = "Create";
             rowCreateButton.Click += rowCreateButton_Click;
@@ -136,7 +136,7 @@
             tablePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tablePanel1.Location = new System.Drawing.Point(0, 0);
             tablePanel1.Name = "tablePanel1";
-            tablePanel1.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] { new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 10F), new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 2F) });
+            tablePanel1.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] { new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 90F), new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 15F) });
             tablePanel1.Size = new System.Drawing.Size(1466, 887);
             tablePanel1.TabIndex = 3;
             tablePanel1.UseSkinIndents = true;
@@ -150,11 +150,11 @@
             tablePanel2.Controls.Add(rowDeleteButton);
             tablePanel2.Controls.Add(rowCreateButton);
             tablePanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            tablePanel2.Location = new System.Drawing.Point(13, 734);
+            tablePanel2.Location = new System.Drawing.Point(13, 754);
             tablePanel2.Name = "tablePanel2";
             tablePanel1.SetRow(tablePanel2, 1);
             tablePanel2.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] { new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 26F) });
-            tablePanel2.Size = new System.Drawing.Size(1440, 140);
+            tablePanel2.Size = new System.Drawing.Size(1440, 120);
             tablePanel2.TabIndex = 1;
             tablePanel2.UseSkinIndents = true;
             // 
@@ -168,7 +168,7 @@
             labelControl2.Margin = new System.Windows.Forms.Padding(15);
             labelControl2.Name = "labelControl2";
             tablePanel2.SetRow(labelControl2, 0);
-            labelControl2.Size = new System.Drawing.Size(183, 89);
+            labelControl2.Size = new System.Drawing.Size(183, 69);
             labelControl2.TabIndex = 2;
             labelControl2.Text = "Row Count:";
             // 

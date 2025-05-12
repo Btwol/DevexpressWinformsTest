@@ -24,10 +24,10 @@ namespace XtraFormsTest.Services
 
         public void ApplyLabelDefaults(LabelControl labelControl)
         {
-            labelControl.Appearance.BackColor = uIConfig.LabelBackColor;
-            labelControl.Appearance.Font = uIConfig.LabelFont;
-            labelControl.Appearance.Options.UseBackColor = true;
-            labelControl.Appearance.Options.UseFont = true;
+            //labelControl.Appearance.BackColor = uIConfig.LabelBackColor;
+            //labelControl.Appearance.Font = uIConfig.LabelFont;
+            //labelControl.Appearance.Options.UseBackColor = true;
+            //labelControl.Appearance.Options.UseFont = true;
         }
     }
 }

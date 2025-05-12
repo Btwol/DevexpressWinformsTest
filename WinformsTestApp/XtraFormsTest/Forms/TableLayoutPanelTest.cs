@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.Mvvm.POCO;
@@ -12,30 +13,22 @@ using DevExpress.XtraEditors;
 
 namespace XtraFormsTest.Forms
 {
-    public partial class TableLayoutPanelTest : DevExpress.XtraEditors.XtraForm
+    public partial class TableLayoutPanelTest : XtraUserControl//DevExpress.XtraEditors.XtraForm
     {
-        private readonly Func<GridViewTest> gridViewTestFormFactory;
-        private readonly Func<TextManipulationView> textManipulationViewFormFactory;
-
-        public TableLayoutPanelTest(Func<GridViewTest> formFactory,
-            Func<TextManipulationView> textManipulationViewFormFactory)
+        public TableLayoutPanelTest(Func<NavigationFrameTest> navigationFrameTestFormFactory)
         {
             InitializeComponent();
-
-            this.gridViewTestFormFactory = formFactory;
-            this.textManipulationViewFormFactory = textManipulationViewFormFactory;
 
             for (int i = 0; i <= 2; i++)
             {
                 for (int j = 0; j <= 2; j++)
                 {
-                    //Panel card = CreateCard((s, e) => OpenNewForm(formFactory), "Card");
+                    Panel card = CreateCard((s, e) => OpenNewForm(navigationFrameTestFormFactory), "Card");
 
-                    //tablePanel1.Controls.Add(card);
-                    //tablePanel1.SetCell(card, i, j);
+                    tablePanel1.Controls.Add(card);
+                    tablePanel1.SetCell(card, i, j);
                 }
             }
-
             //Panel card = CreateCard((s, e) => OpenNewForm(textManipulationViewFormFactory), "Card");
             //tablePanel1.Controls.Add(card);
             //tablePanel1.SetCell(card, 1, 1);
